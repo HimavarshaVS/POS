@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  pythonapp:
+    container_name: pythonapp
+    image: pythonapp
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - DATABASE_URL=postgresql://varsha:admin@db:5432/pos_db
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=varsha
+      - POSTGRES_DB=pos_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+
+volumes:
+  pgdata: {}
