@@ -13,7 +13,7 @@ APIs designed for a point of sale (POS) system. The POS system has the capabilit
 * When docker-compose up completes, the app should be accessible at http://127.0.0.1:8085
 
 # Project organization
-* Application-wide settings are stored in config.py at the root of the repository. These items are accessible on the config dictionary property of the app object.
+* Database configurations are set in .env at the root of the repository.
 * The directory /app contains the API application
 * URL mapping is managed in /app/routers/__init__.py
 * Functionality is organized in packages. Example: /app/routers/menu
