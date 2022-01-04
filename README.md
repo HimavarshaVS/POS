@@ -1,7 +1,6 @@
 # POS
 APIs designed for a point of sale (POS) system. The POS system has the capability to control the menu and perform CRUD operations also which can place an order successfully by validating the payment correctness and item availability
 * Dev environment uses Docker and Docker compose.
-* Project comes along with sample data which is loaded to db during app initialization
 # Development environment setup
 | tool  | version |
 | ----- | ------- |
@@ -22,5 +21,4 @@ APIs designed for a point of sale (POS) system. The POS system has the capabilit
 
 # API Documentation
 API Documentation can be accessible at http://127.0.0.1:8085/v1/api-doc
-API Documentation can be accessible at http://127.0.0.1:8085
 ![swagger_pos](https://user-images.githubusercontent.com/40851462/148033881-253b0411-5fd9-488a-a5e7-f719ce39f816.png)
