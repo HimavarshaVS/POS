@@ -26,11 +26,12 @@ menu_module = module_api.model('MenuModel', {
 
 class Menu(Resource):
 
-    """ POST method to create new item to the menu"""
 
     @validate()
     @module_api.expect(menu_module, validate=True)
     def post(self, body: ItemBaseModel):
+        """ POST method to create new item to the menu"""
+
         res = APIResponse()
         _logger.info(f"Add a new item to the menu")
         post_data = dict(body)
@@ -39,6 +40,7 @@ class Menu(Resource):
             if not all(key in post_data for key in required_params):
                 _logger.error(f"missing required params : {required_params}")
                 return return_error_res(res, f"missing required params : {required_params}", EAPIResponseCode.bad_request)
+
             item_info = MenuModel(**post_data)
             db.session.add(item_info)
             db.session.commit()
@@ -57,7 +59,7 @@ class Menu(Resource):
 
 class FetchMenu(Resource):
     def get(self):
-        """ Fetch list of all menu in the menu"""
+        """ Fetch list of all items in the menu"""
         res = APIResponse()
         _logger.info(f"Fetch all Items from menu")
         try:
@@ -79,6 +81,7 @@ class UpdateMenu(Resource):
     @validate()
     @module_api.expect(menu_module)
     def put(self, item_id: int, body: UpdateItemBaseModel):
+        """ Update an item based on item id"""
         res = APIResponse()
         post_data = dict(request.get_json())
         if post_data.get('id', None) is not None:
@@ -96,6 +99,7 @@ class UpdateMenu(Resource):
 
     @validate()
     def delete(self, item_id: int):
+        """ Delete an item based on item id"""
         _logger.info(f"Deleting item : {item_id}")
         res = APIResponse()
         if item_id is None:

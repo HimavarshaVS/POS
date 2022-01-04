@@ -32,10 +32,6 @@ class Orders(Resource):
         APIResponse()
         _logger.info(f"Creating order")
         try:
-            """
-            2. validate price for list of items
-            """
-
             post_data = dict(body)
             item_ids = [x['item_id'] for x in post_data['items']]
             sql_item_ids = ",".join(map(str,item_ids))
@@ -126,6 +122,7 @@ class Orders(Resource):
 class FetchOrders(Resource):
     @validate()
     def get(self, order_id: int):
+        """ Fetch order details based on order id """
         APIResponse()
         try:
             order_info = db.session.query(OrderModel).filter_by(id=order_id).first()
