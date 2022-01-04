@@ -4,7 +4,7 @@ from typing import Optional
 
 
 class ItemBaseModel(BaseModel):
-    description: constr(min_length=3, max_length=30)
+    description: constr(min_length=3, max_length=150)
     price:  confloat(gt=1)
     quantity: conint()
     modifiers: Optional[dict]
@@ -22,7 +22,7 @@ class UpdateItemBaseModel(BaseModel):
 class CreateItemOrderModel(BaseModel):
     items: list
     payment_amount:  confloat(gt=1)
-    order_note: Optional[constr(min_length=3, max_length=30)]
+    order_note: Optional[constr(min_length=3, max_length=150)]
 
 
 order_schema = {

@@ -13,7 +13,7 @@ _API_NAMESPACE = "Orders"
 _logger = SrvLoggerFactory(_API_NAMESPACE).get_logger()
 
 nested_item_model = {}
-nested_item_model['item'] = fields.Integer()
+nested_item_model['item_id'] = fields.Integer()
 nested_item_model['quantity'] = fields.Integer()
 
 order_module = module_api.model('OrderModel', {
@@ -38,8 +38,8 @@ class Orders(Resource):
 
             post_data = dict(body)
             item_ids = [x['item_id'] for x in post_data['items']]
-
-            query = f"SELECT id item_id, price p, quantity available from menu where id in {tuple(item_ids)}"
+            sql_item_ids = ",".join(map(str,item_ids))
+            query = f"SELECT id item_id, price p, quantity available from menu where id in ({sql_item_ids})"
             db_rec = db.session.execute(query)
             result = [{'item_id': row.item_id, 'price': row.p, 'available': row.available} for row in db_rec]
 
