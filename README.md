@@ -25,4 +25,5 @@ docker-compose up -d
 
 # API Documentation
 API Documentation can be accessible at http://127.0.0.1:8085
-![swagger_pos](https://user-images.githubusercontent.com/40851462/147994520-9f1d9330-8c65-4fdd-998c-a5db4c3424ff.png)
+![swagger_pos](https://user-images.githubusercontent.com/40851462/148007404-55ba796a-9543-44fe-b1f9-0778083185fd.png)
+
