@@ -47,7 +47,7 @@ class Menu(Resource):
             return return_res({"msg": "Item created successfully", "item_info": item_info.__dict__}, EAPIResponseCode.success)
 
         except Exception as error:
-            error_msg = f"Error while trying to save menu to the menu"
+            error_msg = f"Error while trying to save item to the menu"
             if 'UniqueViolation' in error.args[0]:
                 error_msg = f"Item with name {post_data['item_name']} already exists"
                 return return_res(f"{error_msg}", EAPIResponseCode.conflict)
