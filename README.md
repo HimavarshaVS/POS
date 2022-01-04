@@ -16,8 +16,8 @@ APIs designed for a point of sale (POS) system. The POS system has the capabilit
 * Database configurations are set in .env at the root of the repository.
 * The directory /app contains the API application
 * URL mapping is managed in /app/routers/__init__.py
-* Functionality is organized in packages. Example: /app/routers/menu
-* Tests are contained in each package. Example: app/test_items.py
+* Functionality is organized in packages. Example: /app/routers/enpoints
+* Tests are contained in each package. Example: app/test/test_menu.py
 
 # API Documentation
 API Documentation can be accessible at http://127.0.0.1:8085/v1/api-doc
