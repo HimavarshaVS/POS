@@ -2,13 +2,12 @@ from flask import Flask
 from db import db
 import importlib
 import os
-from config import ConfigClass
+import pandas as pd
 from app.models.menu_model import MenuModel
+
 
 def create_app():
     app = Flask(__name__)
-
-    # app.config['SQLALCHEMY_DATABASE_URI'] = ConfigClass.DATABASE_URL
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -20,18 +19,11 @@ def create_app():
     @app.before_first_request
     def create_table():
         db.create_all()
-        # test_rec = MenuModel({
-        #     "item_name": "4 Mc chicken nuggets",
-        #     "description": "nuggets",
-        #     "price": 10.96,
-        #     "quantity": 100,
-        #     "modifiers": {
-        #         "toppings": ["Lettuce", "Tomato", "Pickles", "Onions"],
-        #         "bun_choice": ["sesame", "whole wheat", "keto"]
-        #     }
-        # })
-        # db.session.add_all(test_rec)
-        # db.session.rollback()
-        # db.session.commit()
+        if str(os.getenv('LOAD_SAMPLE_DATA')).lower() in ['true', '0', 'y']:
+            load_sample_data()
 
+    def load_sample_data():
+        with open(r'app/sample_data/menu.csv', 'r') as file:
+            data_df = pd.read_csv(file)
+        data_df.to_sql('menu', con=db.engine, if_exists='replace')
     return app

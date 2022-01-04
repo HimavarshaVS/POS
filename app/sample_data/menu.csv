@@ -1,0 +1,19 @@
+"id","description","quantity","price","modifiers","item_name"
+64,wrap,10,4.99,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""wrap"": [""sesame"", ""whole wheat"", ""keto""]}",Filet-O-Fish jr
+7,chicken,8,7.00,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""sauce"": [""sesame"", ""whole wheat"", ""keto""]}",chicken wrap
+38,burger,48,1.99,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""bun_choice"": [""sesame"", ""whole wheat"", ""keto""]}",junior Mc chicken
+66,burger,500,10.00,"null",beef burger
+46,bun,500,6.99,"{""bun_choice"": [""sesame"", ""whole wheat"", ""keto""], ""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""]}",plant based burger
+67,burger,100,6.00,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""wrap"": [""sesame"", ""whole wheat"", ""keto""]}",jr burger
+75,burger,10,6.99,"{""Toppings"": [""olives"", ""pickles""]}",Jr KFC burger
+22,abc,500,3.00,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""bun_choice"": [""sesame"", ""whole wheat"", ""keto""]}",chicken burger
+9,bun,0,3.00,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""bun_choice"": [""sesame"", ""whole wheat"", ""keto""]}",burger
+6,egg,0,4.00,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""sauce"": [""sesame"", ""whole wheat"", ""keto""]}",egg wrap
+32,bun,500,3.99,"{""bun_choice"": [""sesame"", ""whole wheat"", ""keto""], ""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""]}",meatball burger
+35,bun,500,8.99,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""bun_choice"": [""sesame"", ""whole wheat"", ""keto""]}",grilled chicken burger
+36,bun,500,8.99,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""bun_choice"": [""sesame"", ""whole wheat"", ""keto""]}",grilled Mc chicken
+40,burger,50,5.99,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""bun_choice"": [""sesame"", ""whole wheat"", ""keto""]}",junior Mc chicken nuggets
+41,burger,10,6.99,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""bun_choice"": [""sesame"", ""whole wheat"", ""keto""]}", Mc chicken nuggets
+42,nuggets,100,6.99,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""bun_choice"": [""sesame"", ""whole wheat"", ""keto""]}","8 Mc chicken nuggets"
+57,nuggets,100,10.96,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""bun_choice"": [""sesame"", ""whole wheat"", ""keto""]}","4 Mc chicken nuggets"
+60,wrap,10,7.99,"{""toppings"": [""Lettuce"", ""Tomato"", ""Pickles"", ""Onions""], ""wrap"": [""sesame"", ""whole wheat"", ""keto""]}",Filet-O-Fish
