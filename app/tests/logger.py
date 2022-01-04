@@ -6,8 +6,8 @@ import os
 class Logger(object):
 
     def __init__(self, name='log'):
-        if not os.path.exists("./tests/logs/"):
-            os.makedirs("./tests/logs/")
+        if not os.path.exists("tests/logs/"):
+            os.makedirs("tests/logs/")
         if os.path.isfile("./tests/logs/" + name):
             os.remove("./tests/logs/" + name)
         self.name = name

@@ -35,7 +35,7 @@ class TestAPI(unittest.TestCase):
                 "bun_choice": ["sesame", "whole wheat", "keto"]
             }
         }
-        result = self.app.post("/v1/items", json=data)
+        result = self.app.post("/v1/menu", json=data)
         self.log.info(result)
         res = result.get_json()
         item_id = res['result']['item_info']['id']
@@ -44,7 +44,7 @@ class TestAPI(unittest.TestCase):
         self.delete_items(item_id)
 
     def test_02_get_items(self):
-        result = self.app.get(f"/v1/items")
+        result = self.app.get(f"/v1/menu")
         self.log.info(result)
         res = result.get_json()
         self.assertEqual(result.status_code, 200)
@@ -54,7 +54,7 @@ class TestAPI(unittest.TestCase):
         payload = {
             "price": 1.99
         }
-        result = self.app.put(f"/v1/items/{item_id}", json=payload)
+        result = self.app.put(f"/v1/menu/{item_id}", json=payload)
         self.log.info(result)
         res = result.get_json()
         self.assertEqual(result.status_code, 200)
@@ -62,7 +62,7 @@ class TestAPI(unittest.TestCase):
 
     def test_04_delete_items(self):
         item_id = self.create_items()
-        result = self.app.delete(f"/v1/items/{item_id}")
+        result = self.app.delete(f"/v1/menu/{item_id}")
         self.log.info(result)
         res = result.get_json()
         self.assertEqual(result.status_code, 200)
@@ -78,11 +78,11 @@ class TestAPI(unittest.TestCase):
                 "bun_choice": ["sesame", "whole wheat", "keto"]
             }
         }
-        result = self.app.post("/v1/items", json=payload)
+        result = self.app.post("/v1/menu", json=payload)
         res = result.get_json()
         item_id = res['result']['item_info']['id']
         return item_id
 
     def delete_items(self, item_id):
-        result = self.app.delete(f"/v1/items/{item_id}")
+        result = self.app.delete(f"/v1/menu/{item_id}")
         res = result.get_json()

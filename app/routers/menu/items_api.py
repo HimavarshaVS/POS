@@ -1,11 +1,11 @@
 from flask_restx import Resource
 from flask import request
 from flask_pydantic import validate
-from commons.service_logger.logger_factory_service import SrvLoggerFactory
-from commons.utils import *
-from models.api_response import APIResponse, EAPIResponseCode
-from models.menu_model import MenuModel
-from models.base_models import *
+from app.commons.service_logger.logger_factory_service import SrvLoggerFactory
+from app.commons.utils import *
+from app.models.api_response import APIResponse, EAPIResponseCode
+from app.models.menu_model import MenuModel
+from app.models.base_models import *
 from db import db
 
 
@@ -34,12 +34,12 @@ class Menu(Resource):
             return return_res({"msg": "Item created successfully", "item_info": item_info.__dict__}, EAPIResponseCode.success)
 
         except Exception as error:
-            error_msg = f"Error while trying to save items to the menu"
+            error_msg = f"Error while trying to save menu to the menu"
             _logger.error(f"{error_msg}: {error}")
             return return_res(f"{error_msg}: {error}", EAPIResponseCode.internal_error)
 
     def get(self):
-        """ Fetch list of all items in the menu"""
+        """ Fetch list of all menu in the menu"""
         res = APIResponse()
         _logger.info(f"Fetch all Items from menu")
         try:
@@ -53,8 +53,8 @@ class Menu(Resource):
             _logger.info(f"Items retrieved successfully")
             return return_res(items, EAPIResponseCode.success)
         except Exception as error:
-            _logger.error(f"Error while trying to fetch items from menu : {error}")
-            return return_error_res(res,f"Error while trying to fetch items from menu", EAPIResponseCode.internal_error)
+            _logger.error(f"Error while trying to fetch menu from menu : {error}")
+            return return_error_res(res,f"Error while trying to fetch menu from menu", EAPIResponseCode.internal_error)
 
 
 class UpdateMenu(Resource):

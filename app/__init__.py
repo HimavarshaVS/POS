@@ -3,7 +3,7 @@ from db import db
 import importlib
 import os
 from config import ConfigClass
-from models.menu_model import MenuModel
+from app.models.menu_model import MenuModel
 
 def create_app():
     app = Flask(__name__)
@@ -18,7 +18,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = ConfigClass.DATABASE_URL
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    for apis in ['routers']:
+    for apis in ['app.routers']:
         api = importlib.import_module(apis)
         api.module_api.init_app(app)
     db.init_app(app)
