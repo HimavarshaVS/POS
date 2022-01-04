@@ -1,4 +1,4 @@
-from flask_restx import Resource
+from flask_restx import Resource, fields
 from flask import request
 from flask_pydantic import validate
 from app.commons.service_logger.logger_factory_service import SrvLoggerFactory
@@ -7,16 +7,29 @@ from app.models.api_response import APIResponse, EAPIResponseCode
 from app.models.menu_model import MenuModel
 from app.models.base_models import *
 from db import db
-
+from ...routers import module_api
 
 _API_NAMESPACE = "Menu"
 _logger = SrvLoggerFactory(_API_NAMESPACE).get_logger()
 
 
+nested_modifier_model = {'Toppings': fields.List(fields.String()), 'Bread': fields.List(fields.String())}
+
+menu_module = module_api.model('MenuModel', {
+    "item_name": fields.String(),
+    "description": fields.String(),
+    "price": fields.Float(),
+    "quantity": fields.Integer(),
+    "modifiers": fields.Nested(module_api.model('nested_modifier_model', nested_modifier_model))
+})
+
+
 class Menu(Resource):
 
     """ POST method to create new item to the menu"""
+
     @validate()
+    @module_api.expect(menu_module, validate=True)
     def post(self, body: ItemBaseModel):
         res = APIResponse()
         _logger.info(f"Add a new item to the menu")
@@ -25,7 +38,7 @@ class Menu(Resource):
         try:
             if not all(key in post_data for key in required_params):
                 _logger.error(f"missing required params : {required_params}")
-                return return_error_res(res,f"missing required params : {required_params}", EAPIResponseCode.bad_request)
+                return return_error_res(res, f"missing required params : {required_params}", EAPIResponseCode.bad_request)
             item_info = MenuModel(**post_data)
             db.session.add(item_info)
             db.session.commit()
@@ -35,9 +48,14 @@ class Menu(Resource):
 
         except Exception as error:
             error_msg = f"Error while trying to save menu to the menu"
+            if 'UniqueViolation' in error.args[0]:
+                error_msg = f"Item with name {post_data['item_name']} already exists"
+                return return_res(f"{error_msg}", EAPIResponseCode.conflict)
             _logger.error(f"{error_msg}: {error}")
             return return_res(f"{error_msg}: {error}", EAPIResponseCode.internal_error)
 
+
+class FetchMenu(Resource):
     def get(self):
         """ Fetch list of all menu in the menu"""
         res = APIResponse()
@@ -59,9 +77,12 @@ class Menu(Resource):
 
 class UpdateMenu(Resource):
     @validate()
+    @module_api.expect(menu_module)
     def put(self, item_id: int, body: UpdateItemBaseModel):
         res = APIResponse()
         post_data = dict(request.get_json())
+        if post_data.get('id', None) is not None:
+            return return_res(f"Item id cannot be modified", EAPIResponseCode.bad_request)
         if item_id is None:
             _logger.error(f"Please provide valid item_id to update the item")
         try:
@@ -71,7 +92,7 @@ class UpdateMenu(Resource):
             return return_res(f"Item details updated successfully for item : {item_id}", EAPIResponseCode.success)
         except Exception as error:
             _logger.error(f"Error while trying to update item : {error}")
-            return return_res(f"Error while trying to update item", EAPIResponseCode.internal_error)
+            return return_res(f"Error while trying to update item : {error}", EAPIResponseCode.internal_error)
 
     @validate()
     def delete(self, item_id: int):

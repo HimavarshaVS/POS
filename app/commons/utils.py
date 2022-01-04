@@ -13,7 +13,7 @@ def object_as_dict(obj):
 def return_res(msg, code):
     return {
         "code": code.value,
-        "result": msg
+        "message": msg
     }, code.value
 
 

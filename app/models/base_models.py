@@ -29,7 +29,8 @@ order_schema = {
     "type": "object",
     "properties" : {
         "item_id": {"type": "int"},
-        "quantity": {"type": "float"}
+        "quantity": {"type": "float"},
+        "modifiers": {"type": "object"}
     },
     "required": ["item_id", "quantity"]
 }

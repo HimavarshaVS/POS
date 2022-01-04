@@ -1,15 +1,20 @@
-from flask_restx import Api
-from app.routers.orders.orders_api import *
-from app.routers.menu.items_api import *
+from flask_restx import Api, fields
 
 module_api = Api(
-    version='1.0'
+    version='1.0',
+    title='POS System',
+    description='APIs designed for a point of sale (POS) system. The POS system has the capability to control the menu and perform CRUD operations also which can place an order successfully by validating the payment correctness and item availability',
+    doc='/v1/api-doc'
 )
 
 
-api = module_api.namespace('pos')
+from .endpoints.orders_api import *
+menu_api = module_api.namespace('Menu', description='POS menu CRUD operations', path='/')
+order_api = module_api.namespace('Orders', description='POS order creation', path='/')
 
-api.add_resource(Menu, '/v1/menu')
-api.add_resource(UpdateMenu, '/v1/menu/<item_id>')
-api.add_resource(Orders, '/v1/orders')
-api.add_resource(FetchOrders, "/v1/orders/<order_id>")
+from .endpoints.items_api import *
+menu_api.add_resource(Menu, '/v1/item')
+menu_api.add_resource(FetchMenu, '/v1/items')
+menu_api.add_resource(UpdateMenu, '/v1/item/<item_id>')
+order_api.add_resource(Orders, '/v1/order')
+order_api.add_resource(FetchOrders, "/v1/order/<order_id>")

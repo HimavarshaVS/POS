@@ -17,6 +17,3 @@ class OrderModel(db.Model):
     order_note = db.Column(db.String())
     payment_amount = db.Column(db.Numeric())
     items = db.Column(JSONB)
-
-
-
