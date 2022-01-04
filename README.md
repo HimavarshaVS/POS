@@ -1,3 +1,4 @@
+![swagger_pos](https://user-images.githubusercontent.com/40851462/147994520-9f1d9330-8c65-4fdd-998c-a5db4c3424ff.png)
 # POS
 APIs designed for a point of sale (POS) system. The POS system has the capability to control the menu and perform CRUD operations also which can place an order successfully by validating the payment correctness and item availability
 
