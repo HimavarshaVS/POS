@@ -55,3 +55,4 @@ class APIResponse:
         self._resp['total'] = total_rows
     def set_num_of_pages(self, num_of_pages: int):
         self._resp['num_of_pages'] = num_of_pages
+

@@ -2,6 +2,7 @@ from flask_restx import Resource
 from flask import request
 from flask_pydantic import validate
 from commons.service_logger.logger_factory_service import SrvLoggerFactory
+from commons.utils import *
 from models.api_response import APIResponse, EAPIResponseCode
 from models.menu_model import OrderModel, MenuModel
 from models.base_models import *
@@ -15,9 +16,9 @@ _logger = SrvLoggerFactory(_API_NAMESPACE).get_logger()
 class Orders(Resource):
 
     @validate()
-    def post(self, body: CreateItemBaseModel):
+    def post(self, body: CreateItemOrderModel):
         """ api to place orders """
-        res = APIResponse()
+        APIResponse()
         _logger.info(f"Creating order")
         try:
             """
@@ -32,32 +33,23 @@ class Orders(Resource):
 
             is_valid, msg, merged_rec = self.validate_order(post_data, result)
             if not is_valid and merged_rec is None:
-                res.set_result(msg)
-                res.set_code(EAPIResponseCode.bad_request)
-                return res.response
+                return return_res(msg, EAPIResponseCode.internal_error)
 
-            _logger.info(f"Placing order")
-            order_info = OrderModel(**post_data)
-            db.session.add(order_info)
-            db.session.commit()
-            db.session.refresh(order_info)
-            order_uid = order_info.id
-            _logger.info(f"Order placed successfully for order id : {order_uid}")
+            is_placed, msg = self.place_order(post_data)
+            if not is_placed:
+                return return_res(msg, EAPIResponseCode.internal_error)
 
+            order_uid = msg
             _logger.info(f"updating menu for order placed : {order_uid}")
-            updated_menu_rec = [{'id': i['item_id'], 'quantity':i['available']-i['quantity']} for i in merged_rec]
-            db.session.bulk_update_mappings(MenuModel, updated_menu_rec)
-            db.session.commit()
-            _logger.info(f"Menu has been updated successfully")
+            is_updated, msg = self.update_menu(merged_rec)
+            if not is_updated:
+                return return_res(msg, EAPIResponseCode.internal_error)
 
-            res.set_result(f"Order placed successfully for order id : {order_uid}")
-            res.set_code(EAPIResponseCode.success)
-            return res.response
+            return return_res(f"Order placed successfully for order id : {order_uid}", EAPIResponseCode.success)
+
         except Exception as error:
             _logger.error(f"Error while trying to create a order : {error}")
-            res.set_result(f"Error while trying to create order")
-            res.set_code(EAPIResponseCode.internal_error)
-            return res.response
+            return return_res(f"Error while trying to create a order ", EAPIResponseCode.internal_error)
 
     def validate_order(self,post_data, result):
         item_details = post_data['items']
@@ -82,7 +74,7 @@ class Orders(Resource):
         return True, total, merged_result
 
     def get_merged_dict(self,result, item_details):
-
+        _logger.info(f"Merge item details with db data")
         df1 = pd.DataFrame(result).set_index('item_id')
         df2 = pd.DataFrame(item_details).set_index('item_id')
         df = df1.merge(df2, left_index=True, right_index=True)
@@ -91,29 +83,59 @@ class Orders(Resource):
         merged_result = [dict({"item_id": i, **df.T.to_dict()[i]}) for i in df.T.to_dict().keys()]
         return merged_result
 
+    @staticmethod
+    def place_order(post_data):
+        try:
+            _logger.info(f"Placing order")
+            order_info = OrderModel(**post_data)
+            db.session.add(order_info)
+            db.session.commit()
+            db.session.refresh(order_info)
+            order_uid = order_info.id
+            _logger.info(f"Order placed successfully for order id : {order_uid}")
+            return True, order_uid
+        except Exception as error:
+            _logger.error(f"Error while creating order : {error}")
+            return False, error
+
+    @staticmethod
+    def update_menu(merged_rec):
+        try:
+            updated_menu_rec = [{'id': i['item_id'], 'quantity': i['available'] - i['quantity']} for i in merged_rec]
+            db.session.bulk_update_mappings(MenuModel, updated_menu_rec)
+            db.session.commit()
+            _logger.info(f"Menu has been updated successfully")
+            return True, None
+        except Exception as error:
+            _logger.error(f"Error while updating menu {error}")
+            return False, error
+
+
+class FetchOrders(Resource):
     @validate()
     def get(self, order_id: int):
-        res = APIResponse()
+        APIResponse()
         try:
-            order_info = db.session.query(OrderModel).filter_by(order_id)
-            db_rec = order_info.__dict__
-            res.set_result(db_rec)
-            res.set_code(EAPIResponseCode.success)
+            order_info = db.session.query(OrderModel).filter_by(id=order_id).first()
+            if order_info is None:
+                _logger.error(f"No orders found with order id : {order_id}")
+                return return_res(f"No orders found with order id :{order_id}",
+                                        EAPIResponseCode.no_records)
+            del order_info.__dict__['_sa_instance_state']
+            order_res= {
+                "items": order_info.items,
+                "payment_amount": float(order_info.payment_amount),
+                "order_note": order_info.order_note,
+                "id": order_info.id
+            }
+            return return_res(order_res, EAPIResponseCode.success)
         except Exception as error:
             _logger.error(f"Error while trying to fetch records for order id : {order_id} : {error}")
-            res.set_result(f"Error while trying to fetch records for order id : {order_id} : {error}")
-            res.set_code(EAPIResponseCode.internal_error)
+            return return_res(f"Error while trying to fetch records for order id ", EAPIResponseCode.internal_error)
 
 
-if __name__ == '__main__':
-    om = Orders()
-    item_details = [
-        {
-            "item_id": 22,
-            "quantity": 3
-        },{
-            "item_id": 7,
-            "qunatity": 1
-        }
-    ]
-    om.validate_quantity(item_details)
+def return_res(msg, code):
+    res = APIResponse()
+    res.set_result(msg)
+    res.set_code(code)
+    return res.response, code.value

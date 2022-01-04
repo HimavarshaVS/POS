@@ -1,15 +1,15 @@
 from flask_restx import Api
-from routers.orders_api import Orders
-from routers.items_api import Menu, UpdateMenu
+from routers.orders_api import *
+from routers.items_api import *
 
-# from flask_restful import Api
 module_api = Api(
     version='1.0'
 )
 
 
-api = module_api.namespace('POS',path ='/')
+api = module_api.namespace('pos')
 
 api.add_resource(Menu, '/v1/items')
-api.add_resource(UpdateMenu, '/v1/item/<item_id>')
+api.add_resource(UpdateMenu, '/v1/items/<item_id>')
 api.add_resource(Orders, '/v1/orders')
+api.add_resource(FetchOrders, "/v1/orders/<order_id>")
