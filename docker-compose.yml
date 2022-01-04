@@ -8,8 +8,7 @@ services:
     ports:
       - "8085:80"
     restart: always
-    environment:
-      - DATABASE_URL=postgresql://varsha:admin@db:5432/pos
+    env_file: .env
     depends_on:
       - db
 
