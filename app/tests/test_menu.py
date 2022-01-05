@@ -21,7 +21,7 @@ class TestAPI(unittest.TestCase):
         cls.log = cls.test.log
         cls.app = cls.test.app
         try:
-            cls.item_id = cls.test.create_items()
+            cls.log.info(f"No deletion required")
         except Exception as error:
             cls.log.error(f"Error while creating items in set up class : {error}")
 
