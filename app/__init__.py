@@ -8,8 +8,8 @@ from app.models.menu_model import MenuModel
 
 def create_app():
     app = Flask(__name__)
-    # app.config['SQLALCHEMY_DATABASE_URI'] =  "postgresql://varsha:admin@localhost:5432/data"
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] =  "postgresql://varsha:admin@localhost:5432/data"
+    # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     for apis in ['app.routers']:

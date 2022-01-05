@@ -5,7 +5,32 @@ class SetUpTest:
 
     def __init__(self, log):
         self.log = log
-        self.app = PrepareTest().app
+        self.app = PrepareTest(log).app
+
+    def create_items(self):
+        payload = {
+            "item_name": "2 Mc chicken nuggets jr",
+            "description": "nuggets",
+            "price": 2.99,
+            "quantity": 100,
+            "modifiers": {
+                "toppings": ["Lettuce", "Tomato", "Pickles", "Onions"],
+                "bun_choice": ["sesame", "whole wheat", "keto"]
+            }
+        }
+        result = self.app.post("/v1/item", json=payload)
+        res = result.get_json()
+        if result.status_code == 200:
+            item_id = res['message']['item_info']['id']
+            return item_id
+        else:
+            self.log.error(f"Error while trying to create item : {res}")
+            return None
+
+    def delete_items(self, item_id):
+        result = self.app.delete(f"/v1/menu/{item_id}")
+        res = result.get_json()
+        return res
 
 
 class Singleton(type):
@@ -19,8 +44,9 @@ class Singleton(type):
 
 class PrepareTest(metaclass=Singleton):
 
-    def __init__(self):
+    def __init__(self, log):
         self.app = self.create_test_client()
+        self.log = log
 
     def create_test_client(self):
         app = create_app()
@@ -28,7 +54,3 @@ class PrepareTest(metaclass=Singleton):
         app.config['DEBUG'] = True
         test_client = app.test_client(self)
         return test_client
-
-
-
-

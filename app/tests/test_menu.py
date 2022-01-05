@@ -15,14 +15,24 @@ class TestAPI(unittest.TestCase):
     test = SetUpTest(log)
     item_id = ''
 
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.log = cls.test.log
         cls.app = cls.test.app
+        try:
+            cls.item_id = cls.test.create_items()
+        except Exception as error:
+            cls.log.error(f"Error while creating items in set up class : {error}")
 
     @classmethod
     def tearDownClass(cls) -> None:
-        pass
+        cls.log.info("\n")
+        cls.log.info("START TEAR DOWN PROCESS")
+        try:
+            cls.test.delete_items(item_id=cls.item_id)
+        except Exception as error:
+            cls.log.error(f"Failed to delete items created during set up ; {error}")
 
     def test_01_add_items(self):
         data = {
@@ -35,54 +45,35 @@ class TestAPI(unittest.TestCase):
                 "bun_choice": ["sesame", "whole wheat", "keto"]
             }
         }
-        result = self.app.post("/v1/menu", json=data)
+        result = self.app.post("/v1/item", json=data)
         self.log.info(result)
         res = result.get_json()
-        item_id = res['result']['item_info']['id']
+        item_id = res['message']['item_info']['id']
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(res['result']['msg'], "Item created successfully")
-        self.delete_items(item_id)
+        self.assertEqual(res['message']['msg'], "Item created successfully")
+        self.test.delete_items(item_id)
 
     def test_02_get_items(self):
-        result = self.app.get(f"/v1/menu")
+        result = self.app.get(f"/v1/items")
         self.log.info(result)
         res = result.get_json()
         self.assertEqual(result.status_code, 200)
 
     def test_03_update_items(self):
-        item_id = self.create_items()
+        # item_id = self.create_items()
         payload = {
             "price": 1.99
         }
-        result = self.app.put(f"/v1/menu/{item_id}", json=payload)
+        result = self.app.put(f"/v1/item/{self.item_id}", json=payload)
         self.log.info(result)
         res = result.get_json()
         self.assertEqual(result.status_code, 200)
-        self.delete_items(item_id)
 
     def test_04_delete_items(self):
-        item_id = self.create_items()
-        result = self.app.delete(f"/v1/menu/{item_id}")
+        result = self.app.delete(f"/v1/item/{self.item_id}")
         self.log.info(result)
         res = result.get_json()
         self.assertEqual(result.status_code, 200)
 
-    def create_items(self):
-        payload = {
-            "item_name": "2 Mc chicken nuggets",
-            "description": "nuggets",
-            "price": 2.99,
-            "quantity": 100,
-            "modifiers": {
-                "toppings": ["Lettuce", "Tomato", "Pickles", "Onions"],
-                "bun_choice": ["sesame", "whole wheat", "keto"]
-            }
-        }
-        result = self.app.post("/v1/menu", json=payload)
-        res = result.get_json()
-        item_id = res['result']['item_info']['id']
-        return item_id
 
-    def delete_items(self, item_id):
-        result = self.app.delete(f"/v1/menu/{item_id}")
-        res = result.get_json()
+
