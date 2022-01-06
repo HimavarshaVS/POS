@@ -7,9 +7,9 @@ class SetUpTest:
         self.log = log
         self.app = PrepareTest(log).app
 
-    def create_items(self):
+    def create_items(self, item_name):
         payload = {
-            "item_name": "2 Mc chicken nuggets jr",
+            "item_name": item_name,
             "description": "nuggets",
             "price": 2.99,
             "quantity": 100,
@@ -21,8 +21,7 @@ class SetUpTest:
         result = self.app.post("/v1/item", json=payload)
         res = result.get_json()
         if result.status_code == 200:
-            item_id = res['message']['item_info']['id']
-            return item_id
+            return res
         else:
             self.log.error(f"Error while trying to create item : {res}")
             return None
@@ -31,7 +30,6 @@ class SetUpTest:
         result = self.app.delete(f"/v1/menu/{item_id}")
         res = result.get_json()
         return res
-
 
 class Singleton(type):
     _instances = {}
