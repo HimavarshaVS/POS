@@ -38,7 +38,7 @@ class Menu(Resource):
         try:
             if not all(key in post_data for key in required_params):
                 _logger.error(f"missing required params : {required_params}")
-                return return_error_res(res, f"missing required params : {required_params}", EAPIResponseCode.bad_request)
+                return return_res(f"missing required params : {required_params}", EAPIResponseCode.bad_request)
 
             item_info = MenuModel(**post_data)
             db.session.add(item_info)
@@ -68,12 +68,12 @@ class FetchMenu(Resource):
                 items.append(item.__dict__)
             if len(items) == 0:
                 _logger.error(f"No records found")
-                return return_error_res(res,f"No records found", EAPIResponseCode.no_records)
+                return return_res(f"No records found", EAPIResponseCode.no_records)
             _logger.info(f"Items retrieved successfully")
             return return_res(items, EAPIResponseCode.success)
         except Exception as error:
             _logger.error(f"Error while trying to fetch menu from menu : {error}")
-            return return_error_res(res,f"Error while trying to fetch menu from menu", EAPIResponseCode.internal_error)
+            return return_res(f"Error while trying to fetch menu from menu", EAPIResponseCode.internal_error)
 
 
 class UpdateMenu(Resource):

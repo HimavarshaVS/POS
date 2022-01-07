@@ -22,3 +22,7 @@ APIs designed for a point of sale (POS) system. The POS system has the capabilit
 # API Documentation
 API Documentation can be accessible at http://127.0.0.1:8085/v1/api-doc
 ![swagger_pos](https://user-images.githubusercontent.com/40851462/148033881-253b0411-5fd9-488a-a5e7-f719ce39f816.png)
+
+# Testing
+Unit tests are included in the project under app/tests
+run ```docker exec -it pythonapp pytest app/tests``` to execute all tests of the app
