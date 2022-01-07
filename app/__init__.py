@@ -19,11 +19,4 @@ def create_app():
     @app.before_first_request
     def create_table():
         db.create_all()
-        if str(os.getenv('LOAD_SAMPLE_DATA')).lower() in ['true', '0', 'y']:
-            load_sample_data()
-
-    def load_sample_data():
-        with open(r'app/sample_data/menu.csv', 'r') as file:
-            data_df = pd.read_csv(file)
-        data_df.to_sql('menu', con=db.engine, if_exists='replace', index=False, index_label='id')
     return app

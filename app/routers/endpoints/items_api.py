@@ -26,7 +26,6 @@ menu_module = module_api.model('MenuModel', {
 
 class Menu(Resource):
 
-
     @validate()
     @module_api.expect(menu_module, validate=True)
     def post(self, body: ItemBaseModel):
@@ -88,8 +87,12 @@ class UpdateMenu(Resource):
             return return_res(f"Item id cannot be modified", EAPIResponseCode.bad_request)
         if item_id is None:
             _logger.error(f"Please provide valid item_id to update the item")
+            return return_res(f"Please provide valid item_id to update the item", EAPIResponseCode.bad_request)
+
         try:
-            db.session.query(MenuModel).filter_by(id=item_id).update(dict(post_data))
+            rows_updated = db.session.query(MenuModel).filter_by(id=item_id).update(dict(post_data))
+            if rows_updated == 0:
+                return return_res(f"Item id {item_id} doesn't exists", EAPIResponseCode.not_found)
             db.session.commit()
             _logger.info(f"Item details updated successfully for item : {item_id}")
             return return_res(f"Item details updated successfully for item : {item_id}", EAPIResponseCode.success)
@@ -105,7 +108,9 @@ class UpdateMenu(Resource):
         if item_id is None:
             _logger.error(f"Please provide valid item_id to update the item")
         try:
-            db.session.query(MenuModel).filter_by(id=item_id).delete()
+            rows_deleted = db.session.query(MenuModel).filter_by(id=item_id).delete()
+            if rows_deleted == 0:
+                return return_res(f"Item id {item_id} doesn't exists", EAPIResponseCode.not_found)
             db.session.commit()
             _logger.info(f"Item deleted successfully for item id : {item_id}")
             return return_res(f"Item deleted successfully for item id : {item_id}", EAPIResponseCode.success)
